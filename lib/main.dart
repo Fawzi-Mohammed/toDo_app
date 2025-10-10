@@ -10,7 +10,6 @@ void main() {
 
 final GoRouter _router = GoRouter(
   routes: <RouteBase>[
-  
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
