@@ -17,7 +17,7 @@ final GoRouter _router = GoRouter(
       },
       routes: <RouteBase>[
         GoRoute(
-          path: 'tasks', // note: remove leading '/' for nested route
+          path: 'tasks',
           pageBuilder: (BuildContext context, GoRouterState state) {
             return CustomTransitionPage(
               key: state.pageKey,
@@ -25,7 +25,6 @@ final GoRouter _router = GoRouter(
               transitionDuration: const Duration(milliseconds: 500),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
-                    // Slide from right + fade animation
                     const begin = Offset(1.0, 0.0);
                     const end = Offset.zero;
                     const curve = Curves.easeInOut;
