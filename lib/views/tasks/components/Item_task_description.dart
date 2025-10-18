@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/utils/app_color.dart';
 
 class ItemTaskDescription extends StatelessWidget {
-  const ItemTaskDescription({super.key});
-
+  const ItemTaskDescription({
+    super.key,
+    required this.description,
+    required this.timeOfCreation,
+    required this.dateOfCreation,
+    required this.isCompleted,
+  });
+  final String description;
+  final String timeOfCreation;
+  final String dateOfCreation;
+  final bool isCompleted;
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Description',
-          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),
+          description,
+          style: TextStyle(
+            color: isCompleted ? AppColor.primaryColor : Colors.grey.shade700,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Align(
           alignment: Alignment.centerRight,
@@ -20,12 +33,18 @@ class ItemTaskDescription extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Date',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  timeOfCreation.toString(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: isCompleted ? Colors.white : Colors.grey.shade700,
+                  ),
                 ),
                 Text(
-                  'SubDate',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                  dateOfCreation.toString(),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isCompleted ? Colors.white : Colors.grey.shade700,
+                  ),
                 ),
               ],
             ),

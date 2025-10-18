@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/Logic/TaskCubit/task_cubit.dart';
+import 'package:todo_app/Logic/TaskCubit/task_state.dart';
 import 'package:todo_app/extensions/space_exe.dart';
 import 'package:todo_app/views/home/components/custom_progress_indecator.dart';
 import 'package:todo_app/views/home/components/custom_floting_action_button.dart';
@@ -17,26 +20,31 @@ class HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     TextTheme theme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      floatingActionButton: const CustomFloatingActionButton(),
-      body: SafeArea(
-        child: CustomSliderDrawer(
-          widget: Column(
-            children: [
-              30.h,
-              CustomProgressIndecator(theme: theme),
+    return BlocBuilder<TaskCubit, TaskState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          floatingActionButton: const CustomFloatingActionButton(),
+          body: SafeArea(
+            child: CustomSliderDrawer(
+              widget: Column(
+                children: [
+                  30.h,
 
-              //Divider
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Divider(thickness: 2, indent: 100),
+                  CustomProgressIndecator(theme: theme),
+
+                  //Divider
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Divider(thickness: 2, indent: 100),
+                  ),
+                  HomeViewBody(),
+                ],
               ),
-              HomeViewBody(),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -1,56 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/extensions/space_exe.dart';
-import 'package:todo_app/utils/app_color.dart';
-import 'package:todo_app/utils/app_str.dart';
-import 'package:todo_app/views/tasks/components/Item_task_description.dart';
-import 'package:todo_app/views/tasks/components/custom_icon.dart';
-import 'package:todo_app/views/tasks/components/item_title.dart';
+import 'package:todo_app/models/task.dart';
+import 'package:todo_app/views/tasks/widget/complate_incomplate_task_item.dart';
 
 class TaskItem extends StatelessWidget {
-  const TaskItem({super.key});
+  const TaskItem({super.key, required this.task});
+  final Task task;
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: UniqueKey(),
-      direction: DismissDirection.horizontal,
-      onDismissed: (_) {
-        // we will remove current task from Db
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 600),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        // ✨ Smooth slide + fade animation
+        final offsetAnimation =
+            Tween<Offset>(
+              begin: const Offset(0.1, 0),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+            );
+
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(position: offsetAnimation, child: child),
+        );
       },
-      background: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.delete_outline, color: Colors.grey),
-          8.w,
-          Text(AppStr.deleteTask),
-        ],
-      ),
-      child: GestureDetector(
-        onTap: () {
-          //Navigate to Task View to see Task Details
-        },
-        child: AnimatedContainer(
-          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          duration: const Duration(milliseconds: 600),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: .1),
-                offset: const Offset(0, 4),
-                blurRadius: 10,
-              ),
-            ],
-            color: AppColor.primaryColor.withValues(alpha: 0.3),
-          ),
-          child: ListTile(
-            leading: CustomIcon(),
-            //Task Title
-            title: ItemTitle(),
-            //Task Description
-            subtitle: ItemTaskDescription(),
-          ),
-        ),
-      ),
+
+      // Use ValueKey to let AnimatedSwitcher know which widget is which
+      child: task.isCompleted
+          ? CompletedTaskItem(key: const ValueKey('completed'), task: task)
+          : InCompletedTaskItem(key: const ValueKey('incomplete'), task: task),
     );
   }
 }

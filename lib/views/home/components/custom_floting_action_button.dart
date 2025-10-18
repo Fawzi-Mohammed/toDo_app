@@ -10,7 +10,7 @@ class CustomFloatingActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go('/tasks');
+        context.go('/Addtasks');
       },
       child: Material(
         borderRadius: BorderRadius.circular(15),

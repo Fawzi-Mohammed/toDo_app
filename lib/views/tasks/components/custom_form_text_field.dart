@@ -6,11 +6,11 @@ class CustomFormTextField extends StatelessWidget {
     super.key,
     required this.controller,
     this.isForDescription = false,
-    required this.onFieldSubmitted,
+    this.validator,
   });
   final TextEditingController controller;
   final bool isForDescription;
-  final void Function(String)? onFieldSubmitted;
+  final String? Function(String?)? validator;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,12 +18,16 @@ class CustomFormTextField extends StatelessWidget {
       width: double.infinity,
       child: ListTile(
         title: TextFormField(
-          
+          validator: validator,
           controller: controller,
-          onFieldSubmitted: onFieldSubmitted,
           maxLines: !isForDescription ? 6 : null,
           cursorHeight: !isForDescription ? 60 : null,
           decoration: InputDecoration(
+            errorStyle: const TextStyle(
+              color: Colors.red,
+
+              fontSize: 13,
+            ), // ✅ makes error text visible,
             prefixIcon: isForDescription
                 ? Icon(Icons.bookmark_border, color: Colors.grey)
                 : null,
