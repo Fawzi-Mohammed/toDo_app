@@ -30,7 +30,10 @@ class InCompletedTaskItem extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          context.go('/tasks', extra: {'isUpdate': true, 'task': task});
+          context.go(
+            '/toDoHome/tasks',
+            extra: {'isUpdate': true, 'task': task},
+          );
         },
         child: AnimatedContainer(
           margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -94,7 +97,10 @@ class CompletedTaskItem extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          context.go('/tasks', extra: {'isUpdate': true, 'task': task});
+          context.go(
+            '/toDoHome/tasks',
+            extra: {'isUpdate': true, 'task': task},
+          );
         },
         child: AnimatedContainer(
           margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

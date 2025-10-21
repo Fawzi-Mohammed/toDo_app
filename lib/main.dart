@@ -2,23 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/Logic/TaskCubit/task_cubit.dart';
-import 'package:todo_app/data/isar_data_base.dart';
+import 'package:todo_app/data/isar_data_base_of_tasks.dart';
+import 'package:todo_app/data/isar_data_base_of_users.dart';
+import 'package:todo_app/data/isar_data_base_service.dart';
 import 'package:todo_app/utils/app_str_style.dart';
 import 'package:todo_app/views/home/to_do_home_view.dart';
+import 'package:todo_app/views/login/login_view.dart';
 import 'package:todo_app/views/tasks/task_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await IsarDataBase.init();
+  await IsarService.init();
   runApp(const MyApp());
 }
 
 final GoRouter _router = GoRouter(
+  initialLocation: '/login',
   routes: <RouteBase>[
     GoRoute(
-      path: '/',
+      path: '/login',
       builder: (BuildContext context, GoRouterState state) {
-        return const ToDoHomeView();
+        return const LoginView();
+      },
+    ),
+    GoRoute(
+      path: '/toDoHome',
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: const ToDoHomeView(),
+          transitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0); // slide from right
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
+
+            var tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(CurveTween(curve: curve));
+
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: FadeTransition(opacity: animation, child: child),
+            );
+          },
+        );
       },
       routes: <RouteBase>[
         GoRoute(
@@ -28,6 +57,7 @@ final GoRouter _router = GoRouter(
 
             final bool isUpdate = extra?['isUpdate'] ?? false;
             final task = extra?['task'];
+
             return CustomTransitionPage(
               key: state.pageKey,
               child: TaskView(isUpdate: isUpdate, task: task),

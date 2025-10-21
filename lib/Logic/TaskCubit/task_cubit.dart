@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:todo_app/Logic/TaskCubit/task_state.dart';
-import 'package:todo_app/data/isar_data_base.dart';
+import 'package:todo_app/data/isar_data_base_of_tasks.dart';
 import 'package:todo_app/models/task.dart';
 
 class TaskCubit extends Cubit<TaskState> {
   TaskCubit() : super(TaskInitial());
   Future<void> loadTasks() async {
     try {
-      final tasks = await IsarDataBase.getAllTasks();
+      final tasks = await IsarDataBaseOfTasks.getAllTasks();
       int numOfComlatedTask = 0;
       if (tasks.isNotEmpty) {
         for (int i = 0; i < tasks.length; i++) {
@@ -27,7 +27,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   Future<void> addTask(Task task) async {
     try {
-      await IsarDataBase.addTask(task);
+      await IsarDataBaseOfTasks.addTask(task);
       await loadTasks();
     } catch (e) {
       emit(TaskError("Failed to add task: $e"));
@@ -36,7 +36,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   Future<void> updateTask(Task task) async {
     try {
-      await IsarDataBase.updateTask(task);
+      await IsarDataBaseOfTasks.updateTask(task);
       await loadTasks();
     } catch (e) {
       emit(TaskError("Failed to update task: $e"));
@@ -45,7 +45,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   Future<void> deleteTask(int id) async {
     try {
-      await IsarDataBase.deleteTask(id);
+      await IsarDataBaseOfTasks.deleteTask(id);
       await loadTasks();
     } catch (e) {
       emit(TaskError("Failed to delete task: $e"));
@@ -54,7 +54,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   Future<void> deleteAllTasks() async {
     try {
-      final tasks = await IsarDataBase.getAllTasks();
+      final tasks = await IsarDataBaseOfTasks.getAllTasks();
 
       if (tasks.isEmpty) {
         emit(TaskEmptyDelateWarning());
@@ -71,7 +71,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   Future<void> confirmDeleteAllTasks() async {
     try {
-      await IsarDataBase.deleteAllTasksFromDB();
+      await IsarDataBaseOfTasks.deleteAllTasksFromDB();
       await loadTasks();
     } catch (e) {
       emit(TaskError('Failed to delete all tasks: $e'));

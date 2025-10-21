@@ -1,13 +1,10 @@
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:todo_app/data/isar_data_base_service.dart';
 import 'package:todo_app/models/task.dart';
 
-class IsarDataBase {
-  static late Isar _isar;
-  static Future<void> init() async {
-    final dir = await getApplicationDocumentsDirectory();
-    _isar = await Isar.open([TaskSchema], directory: dir.path);
-  }
+class IsarDataBaseOfTasks {
+   static final _isar = IsarService.isar;
+
 
   // static Isar get isar {
   //   if (_isar == null) {
