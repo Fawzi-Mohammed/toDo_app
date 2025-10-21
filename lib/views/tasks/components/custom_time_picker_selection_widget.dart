@@ -5,9 +5,13 @@ class CustomTimePickerSelectionWidget extends StatelessWidget {
     super.key,
     this.onTap,
     required this.title,
+    required this.date,
+    required this.isTime,
   });
   final void Function()? onTap;
   final String title;
+  final String date;
+  final bool isTime;
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
@@ -27,19 +31,25 @@ class CustomTimePickerSelectionWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(title, style: textTheme.headlineSmall),
-            ),
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              width: 80,
-              height: 35,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(10),
+            Expanded(
+              flex: isTime ? 0 : 2,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(title, style: textTheme.headlineSmall),
               ),
-              child: Center(child: Text(title, style: textTheme.titleSmall)),
+            ),
+            Expanded(
+              flex: isTime ? 0 : 2,
+              child: Container(
+                margin: const EdgeInsets.only(right: 10),
+                width: 80,
+                height: 35,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(child: Text(date, style: textTheme.titleSmall)),
+              ),
             ),
           ],
         ),

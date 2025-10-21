@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:todo_app/Logic/TaskCubit/task_cubit.dart';
 import 'package:todo_app/extensions/space_exe.dart';
 import 'package:todo_app/models/task.dart';
@@ -29,7 +30,7 @@ class InCompletedTaskItem extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          //Navigate to Task View to see Task Details
+          context.go('/tasks', extra: {'isUpdate': true, 'task': task});
         },
         child: AnimatedContainer(
           margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -93,7 +94,7 @@ class CompletedTaskItem extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          //Navigate to Task View to see Task Details
+          context.go('/tasks', extra: {'isUpdate': true, 'task': task});
         },
         child: AnimatedContainer(
           margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

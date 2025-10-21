@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/Logic/TaskCubit/task_cubit.dart';
 import 'package:todo_app/data/isar_data_base.dart';
 import 'package:todo_app/utils/app_str_style.dart';
-import 'package:todo_app/views/home/home_view.dart';
-import 'package:todo_app/views/tasks/add_task_view.dart';
+import 'package:todo_app/views/home/to_do_home_view.dart';
+import 'package:todo_app/views/tasks/task_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,15 +18,19 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return const HomeView();
+        return const ToDoHomeView();
       },
       routes: <RouteBase>[
         GoRoute(
-          path: 'Addtasks',
+          path: 'tasks',
           pageBuilder: (BuildContext context, GoRouterState state) {
+            final extra = state.extra as Map<String, dynamic>?;
+
+            final bool isUpdate = extra?['isUpdate'] ?? false;
+            final task = extra?['task'];
             return CustomTransitionPage(
               key: state.pageKey,
-              child: const AddTaskView(),
+              child: TaskView(isUpdate: isUpdate, task: task),
               transitionDuration: const Duration(milliseconds: 500),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {

@@ -22,6 +22,11 @@ class ItemTaskDescription extends StatelessWidget {
           description,
           style: TextStyle(
             color: isCompleted ? AppColor.primaryColor : Colors.grey.shade700,
+            decoration: isCompleted
+                ? TextDecoration.lineThrough
+                : TextDecoration.none,
+            decorationColor: isCompleted ? AppColor.primaryColor : Colors.black,
+            decorationThickness: isCompleted ? 2 : 0,
             fontWeight: FontWeight.w500,
           ),
         ),

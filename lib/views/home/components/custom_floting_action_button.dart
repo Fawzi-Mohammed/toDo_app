@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/utils/app_color.dart';
@@ -10,7 +9,7 @@ class CustomFloatingActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go('/Addtasks');
+        context.go('/tasks');
       },
       child: Material(
         borderRadius: BorderRadius.circular(15),

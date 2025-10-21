@@ -13,7 +13,6 @@ class TaskItem extends StatelessWidget {
       switchInCurve: Curves.easeOutCubic,
       switchOutCurve: Curves.easeInCubic,
       transitionBuilder: (Widget child, Animation<double> animation) {
-        // ✨ Smooth slide + fade animation
         final offsetAnimation =
             Tween<Offset>(
               begin: const Offset(0.1, 0),

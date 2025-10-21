@@ -16,7 +16,7 @@ class CustomProgressIndecator extends StatelessWidget {
       builder: (context, state) {
         if (state is TaskLoaded) {
           final totalTasks = state.tasks.length;
-          final completedTasks = state.numOfComlatedTask; // from Cubit
+          final completedTasks = state.numOfComlatedTask;
           final progress = totalTasks == 0 ? 0.0 : completedTasks / totalTasks;
 
           return SizedBox(
@@ -25,17 +25,25 @@ class CustomProgressIndecator extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // progress indicator
-                SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: CircularProgressIndicator(
-                    value: progress,
-                    backgroundColor: Colors.grey,
-                    valueColor: const AlwaysStoppedAnimation(
-                      AppColor.primaryColor,
-                    ),
-                  ),
+                // Animated progress indicator
+                TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: progress),
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeInOut,
+                  builder: (context, value, child) {
+                    return SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(
+                        value: value,
+                        backgroundColor: Colors.grey.shade300,
+                        valueColor: const AlwaysStoppedAnimation(
+                          AppColor.primaryColor,
+                        ),
+                        strokeWidth: 4,
+                      ),
+                    );
+                  },
                 ),
 
                 // space
@@ -58,9 +66,8 @@ class CustomProgressIndecator extends StatelessWidget {
             ),
           );
         } else {
-          // No tasks yet
           return Center(child: Text('No tasks yet', style: theme.titleMedium));
-        } 
+        }
       },
     );
   }

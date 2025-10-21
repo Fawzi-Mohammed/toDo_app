@@ -2,7 +2,7 @@ import 'package:fancy_snackbar/fancy_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
-import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_app/Logic/TaskCubit/task_cubit.dart';
 import 'package:todo_app/extensions/space_exe.dart';
 import 'package:todo_app/models/task.dart';
@@ -12,11 +12,47 @@ import 'package:todo_app/views/tasks/components/custom_add_task_top_headline_tex
 import 'package:todo_app/views/tasks/components/custom_form_text_field.dart';
 import 'package:todo_app/views/tasks/components/custom_time_picker_selection_widget.dart';
 
-class AddTaskViewBody extends StatelessWidget {
-  AddTaskViewBody({super.key});
+class TaskViewBody extends StatefulWidget {
+  const TaskViewBody({super.key, this.isUpdate = false, this.task});
+
+  @override
+  State<TaskViewBody> createState() => _TaskViewBodyState();
+  final bool isUpdate;
+  final Task? task;
+}
+
+class _TaskViewBodyState extends State<TaskViewBody> {
   TextEditingController titleTaskController = TextEditingController();
+
   TextEditingController descriptionTaskController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String dateAtTime = DateFormat('hh:mm a').format(DateTime.now()).toString();
+  String dateOfCreated = DateFormat(
+    'E, MMM d, yyyy',
+  ).format(DateTime.now()).toString();
+
+  @override
+  void initState() {
+    if (widget.isUpdate) {
+      titleTaskController = TextEditingController(text: widget.task!.title);
+      descriptionTaskController = TextEditingController(
+        text: widget.task!.subTitle,
+      );
+      dateAtTime = widget.task!.createdAtTime;
+      dateOfCreated = widget.task!.createdAtDate;
+      setState(() {});
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    titleTaskController.dispose();
+    descriptionTaskController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +76,10 @@ class AddTaskViewBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(child: Divider(thickness: 2)),
-                    CustomAddTaskTopHeadlineText(textTheme: textTheme),
+                    CustomAddTaskTopHeadlineText(
+                      textTheme: textTheme,
+                      isUpdate: widget.isUpdate,
+                    ),
                     Expanded(child: Divider(thickness: 2)),
                   ],
                 ),
@@ -77,20 +116,28 @@ class AddTaskViewBody extends StatelessWidget {
               ),
 
               CustomTimePickerSelectionWidget(
+                isTime: true,
                 title: AppStr.timeString,
                 onTap: () {
-                  DatePicker.showTimePicker(
+                  DatePicker.showTime12hPicker(
                     context,
                     showTitleActions: true,
                     currentTime: DateTime.now(),
                     locale: LocaleType.en,
-                    showSecondsColumn: false,
-                    onConfirm: (time) {},
-                    onCancel: () {},
+
+                    onConfirm: (time) {
+                      dateAtTime = DateFormat(
+                        'hh:mm a',
+                      ).format(time).toString();
+                      setState(() {});
+                    },
                   );
                 },
+                date: dateAtTime,
               ),
               CustomTimePickerSelectionWidget(
+                isTime: false,
+                date: dateOfCreated,
                 title: AppStr.dateString,
                 onTap: () {
                   DatePicker.showDatePicker(
@@ -99,8 +146,12 @@ class AddTaskViewBody extends StatelessWidget {
                     currentTime: DateTime.now(),
                     locale: LocaleType.en,
                     minTime: DateTime.now(),
-                    onConfirm: (time) {},
-                    onCancel: () {},
+                    onConfirm: (time) {
+                      dateOfCreated = DateFormat(
+                        'E, MMM d, yyyy',
+                      ).format(time).toString();
+                      setState(() {});
+                    },
                   );
                 },
               ),
@@ -115,12 +166,35 @@ class AddTaskViewBody extends StatelessWidget {
                   minWidth: double.infinity,
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      context.read<TaskCubit>().addTask(
-                        Task.create(
-                          title: titleTaskController.text.trim(),
-                          subtitle: descriptionTaskController.text.trim(),
-                        ),
+                      if (widget.isUpdate) {
+                        widget.task!
+                          ..title = titleTaskController.text.trim()
+                          ..subTitle = descriptionTaskController.text.trim()
+                          ..createdAtTime = dateAtTime
+                          ..createdAtDate = dateOfCreated;
+
+                        context.read<TaskCubit>().updateTask(widget.task!);
+                      } else {
+                        context.read<TaskCubit>().addTask(
+                          Task.create(
+                            title: titleTaskController.text.trim(),
+                            subtitle: descriptionTaskController.text.trim(),
+                            createdAtTime: dateAtTime,
+                            CreatedAtDate: dateOfCreated,
+                          ),
+                        );
+                      }
+
+                      FancySnackbar.showSnackbar(
+                        context,
+                        snackBarType: FancySnackBarType.success,
+                        duration: 3,
+                        title: widget.isUpdate
+                            ? 'Task Updated Successfully'
+                            : 'Task Added Successfully',
+                        message: '',
                       );
+
                       titleTaskController.clear();
                       descriptionTaskController.clear();
                       Navigator.pop(context);
@@ -130,7 +204,7 @@ class AddTaskViewBody extends StatelessWidget {
                         snackBarType: FancySnackBarType.error,
                         title: 'Some required fields are empty',
                         message: 'please fill all the required fields',
-                        duration: 5,
+                        duration: 2,
                       );
                     }
                   },
@@ -141,7 +215,9 @@ class AddTaskViewBody extends StatelessWidget {
                   ),
                   height: 55,
                   child: Text(
-                    AppStr.addTaskString,
+                    widget.isUpdate
+                        ? AppStr.updateCurrentTask
+                        : AppStr.addTaskString,
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
