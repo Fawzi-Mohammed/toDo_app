@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/Logic/AuthCubit/auth_cubit.dart';
 import 'package:todo_app/Logic/TaskCubit/task_cubit.dart';
-import 'package:todo_app/data/isar_data_base_of_tasks.dart';
-import 'package:todo_app/data/isar_data_base_of_users.dart';
 import 'package:todo_app/data/isar_data_base_service.dart';
 import 'package:todo_app/utils/app_str_style.dart';
 import 'package:todo_app/views/home/to_do_home_view.dart';
-import 'package:todo_app/views/login/login_view.dart';
+import 'package:todo_app/views/login%20and%20signUp/login_view.dart';
 import 'package:todo_app/views/tasks/task_view.dart';
 
 void main() async {
@@ -22,7 +21,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/login',
       builder: (BuildContext context, GoRouterState state) {
-        return const LoginView();
+        return LoginView();
       },
     ),
     GoRoute(
@@ -92,8 +91,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TaskCubit()..loadTasks(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TaskCubit>(create: (context) => TaskCubit()..loadTasks()),
+        BlocProvider<AuthCubit>(create: (context) => AuthCubit()),
+      ],
       child: MaterialApp.router(
         routerConfig: _router,
         debugShowCheckedModeBanner: false,

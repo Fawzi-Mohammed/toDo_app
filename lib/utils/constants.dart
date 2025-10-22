@@ -1,9 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:todo_app/Logic/TaskCubit/task_cubit.dart';
-import 'package:todo_app/data/isar_data_base_of_tasks.dart';
 import 'package:todo_app/utils/app_str.dart';
 
 const String lottieURL = 'assets/lottie/1.json';

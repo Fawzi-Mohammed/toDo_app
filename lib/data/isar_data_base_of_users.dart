@@ -5,7 +5,6 @@ import 'package:todo_app/models/user_model.dart';
 class IsarDataBaseOfUsers {
   static final _isar = IsarService.isar;
 
-  
   /// Add a new user
   static Future<int> addUser(UserModel user) async {
     return await _isar.writeTxn(() async {
@@ -18,7 +17,10 @@ class IsarDataBaseOfUsers {
     return await _isar.userModels.where().findAll();
   }
 
-
+  /// ✅ Get user by email
+  static Future<UserModel?> getUserByEmail(String email) async {
+    return await _isar.userModels.filter().userEmailEqualTo(email).findFirst();
+  }
 
   /// ✅ Get user by userId (your custom ID)
   static Future<UserModel?> getUserByUserId(String userId) async {
@@ -31,8 +33,6 @@ class IsarDataBaseOfUsers {
       await _isar.userModels.put(updatedUser);
     });
   }
-
-
 
   /// Delete user by Isar ID
   static Future<void> deleteUser(int id) async {
