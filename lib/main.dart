@@ -7,6 +7,7 @@ import 'package:todo_app/data/isar_data_base_service.dart';
 import 'package:todo_app/utils/app_str_style.dart';
 import 'package:todo_app/views/home/to_do_home_view.dart';
 import 'package:todo_app/views/login%20and%20signUp/login_view.dart';
+import 'package:todo_app/views/login%20and%20signUp/sign_up_view.dart';
 import 'package:todo_app/views/tasks/task_view.dart';
 
 void main() async {
@@ -16,12 +17,18 @@ void main() async {
 }
 
 final GoRouter _router = GoRouter(
-  initialLocation: '/login',
+  initialLocation: '/',
   routes: <RouteBase>[
     GoRoute(
-      path: '/login',
+      path: '/',
       builder: (BuildContext context, GoRouterState state) {
         return LoginView();
+      },
+    ),
+    GoRoute(
+      path: '/signUp',
+      builder: (BuildContext context, GoRouterState state) {
+        return SignUpView();
       },
     ),
     GoRoute(

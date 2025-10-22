@@ -7,6 +7,7 @@ import 'package:todo_app/Logic/AuthCubit/auth_state.dart';
 import 'package:todo_app/extensions/space_exe.dart';
 import 'package:todo_app/views/login%20and%20signUp/components/animated_back_ground.dart';
 import 'package:todo_app/views/login%20and%20signUp/components/custom_form_text_field.dart';
+import 'package:todo_app/views/login%20and%20signUp/components/custom_text_button.dart';
 
 class LoginView extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -103,7 +104,6 @@ class LoginView extends StatelessWidget {
                                   prefixIcon: Icons.email,
                                 ),
 
-                                // 🧱 Example form field placeholders
                                 const SizedBox(height: 16),
 
                                 CustomTextFormField(
@@ -145,6 +145,8 @@ class LoginView extends StatelessWidget {
                                       ? CircularProgressIndicator()
                                       : const Text("Login"),
                                 ),
+                                16.h,
+                                CustomTextButton(navigateTo: '/signUp'),
                                 8.h,
                                 Text(
                                   state is AuthFieldState ? state.errorMas : '',
