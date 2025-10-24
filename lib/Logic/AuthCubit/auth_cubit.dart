@@ -65,6 +65,6 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> LogOut() async {
     await SharedPrefesOfLoggedInUser.deleteUser();
-    checkIfLoggedIn();
+    emit(AuthInitialState());
   }
 }

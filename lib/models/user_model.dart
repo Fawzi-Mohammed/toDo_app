@@ -20,7 +20,8 @@ class UserModel {
     required this.userJob,
     required this.userName,
     required this.userProfilePhotoPath,
-  }) : userId = const Uuid().v4();
+    String userId = '',
+  }) : userId = userId.isEmpty ? const Uuid().v4() : userId;
   String toJson() {
     return jsonEncode({
       'userId': userId,
@@ -40,6 +41,7 @@ class UserModel {
       userJob: map['userJob'],
       userEmail: map['userEmail'],
       password: map['password'],
+      userId: map['userId'] ?? '',
     );
   }
 }

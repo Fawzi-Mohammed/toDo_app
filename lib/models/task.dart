@@ -1,7 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:intl/intl.dart';
 
-part 'task.g.dart'; // 👈 required for code generation
+part 'task.g.dart'; // dY`^ required for code generation
 
 @collection
 class Task {
@@ -12,6 +12,7 @@ class Task {
   late String createdAtTime;
   late String createdAtDate;
   late bool isCompleted;
+  String userID = '';
 
   Task({
     required this.title,
@@ -22,19 +23,22 @@ class Task {
   });
 
   factory Task.create({
-    required String? title,
-    required String? subtitle,
+    String? title,
+    String? subtitle,
     String? createdAtTime,
-    String? CreatedAtDate,
-  }) => Task(
-    title: title ?? '',
-    subTitle: subtitle ?? '',
-    createdAtTime:
-        createdAtTime ??
-        DateFormat('hh:mm a').format(DateTime.now()).toString(),
-    createdAtDate:
-        CreatedAtDate ??
-        DateFormat('E, MMM d, yyyy').format(DateTime.now()).toString(),
-    isCompleted: false,
-  );
+    String? createdAtDate,
+    required String userID,
+  }) {
+    return Task(
+      title: title ?? '',
+      subTitle: subtitle ?? '',
+      createdAtTime:
+          createdAtTime ??
+          DateFormat('hh:mm a').format(DateTime.now()).toString(),
+      createdAtDate:
+          createdAtDate ??
+          DateFormat('E, MMM d, yyyy').format(DateTime.now()).toString(),
+      isCompleted: false,
+    )..userID = userID;
+  }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/Logic/AuthCubit/auth_cubit.dart';
 import 'package:todo_app/Logic/AuthCubit/auth_state.dart';
+import 'package:todo_app/Logic/TaskCubit/task_cubit.dart';
 import 'package:todo_app/extensions/space_exe.dart';
 import 'package:todo_app/models/slider_drawer_item.dart';
 import 'package:todo_app/models/user_model.dart';
@@ -52,7 +53,11 @@ class _CustomSliderDrawerBodyState extends State<CustomSliderDrawerBody> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccessState) {
+          context.read<TaskCubit>().loadTasksForUser(state.user.userId);
           setState(() => userModel = state.user);
+        } else if (state is AuthInitialState) {
+          context.read<TaskCubit>().clear();
+          setState(() => userModel = null);
         }
       },
       builder: (context, state) {

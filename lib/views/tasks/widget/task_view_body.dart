@@ -166,6 +166,21 @@ class _TaskViewBodyState extends State<TaskViewBody> {
                   minWidth: double.infinity,
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      final taskCubit = context.read<TaskCubit>();
+                      final userId = taskCubit.currentUserId;
+
+                      if (userId == null) {
+                        FancySnackbar.showSnackbar(
+                          context,
+                          snackBarType: FancySnackBarType.error,
+                          title: 'User not found',
+                          message: 'Please log in again to add tasks.',
+                          duration: 2,
+                        );
+
+                        return;
+                      }
+
                       if (widget.isUpdate) {
                         widget.task!
                           ..title = titleTaskController.text.trim()
@@ -173,14 +188,15 @@ class _TaskViewBodyState extends State<TaskViewBody> {
                           ..createdAtTime = dateAtTime
                           ..createdAtDate = dateOfCreated;
 
-                        context.read<TaskCubit>().updateTask(widget.task!);
+                        taskCubit.updateTask(widget.task!);
                       } else {
-                        context.read<TaskCubit>().addTask(
+                        taskCubit.addTask(
                           Task.create(
                             title: titleTaskController.text.trim(),
                             subtitle: descriptionTaskController.text.trim(),
                             createdAtTime: dateAtTime,
-                            CreatedAtDate: dateOfCreated,
+                            createdAtDate: dateOfCreated,
+                            userID: userId,
                           ),
                         );
                       }

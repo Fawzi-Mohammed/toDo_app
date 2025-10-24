@@ -119,6 +119,7 @@ UserModel _userModelDeserialize(
   final object = UserModel(
     password: reader.readString(offsets[0]),
     userEmail: reader.readString(offsets[1]),
+    userId: reader.readStringOrNull(offsets[2]) ?? '',
     userJob: reader.readString(offsets[3]),
     userName: reader.readString(offsets[4]),
     userProfilePhotoPath: reader.readStringOrNull(offsets[5]),
@@ -139,7 +140,7 @@ P _userModelDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? '') as P;
     case 3:
       return (reader.readString(offset)) as P;
     case 4:

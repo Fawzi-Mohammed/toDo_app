@@ -106,7 +106,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit()..checkIfLoggedIn(),
         ),
-        BlocProvider<TaskCubit>(create: (context) => TaskCubit()..loadTasks()),
+        BlocProvider<TaskCubit>(create: (context) => TaskCubit()),
       ],
       child: MaterialApp.router(
         routerConfig: router,
