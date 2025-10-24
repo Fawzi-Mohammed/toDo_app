@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:isar/isar.dart';
 import 'package:uuid/uuid.dart';
 part 'user_model.g.dart'; // 👈 required for code generation
@@ -8,7 +10,7 @@ class UserModel {
   @Index(unique: true)
   final String userId;
   final String userName;
-  final String userProfilePhoto;
+  final String? userProfilePhotoPath;
   final String userJob;
   final String userEmail;
   final String password;
@@ -17,6 +19,27 @@ class UserModel {
     required this.userEmail,
     required this.userJob,
     required this.userName,
-    required this.userProfilePhoto,
+    required this.userProfilePhotoPath,
   }) : userId = const Uuid().v4();
+  String toJson() {
+    return jsonEncode({
+      'userId': userId,
+      'userName': userName,
+      'userProfilePhotoPath': userProfilePhotoPath,
+      'userJob': userJob,
+      'userEmail': userEmail,
+      'password': password,
+    });
+  }
+
+  factory UserModel.fromJson(String jsonString) {
+    final map = jsonDecode(jsonString);
+    return UserModel(
+      userName: map['userName'],
+      userProfilePhotoPath: map['userProfilePhotoPath'],
+      userJob: map['userJob'],
+      userEmail: map['userEmail'],
+      password: map['password'],
+    );
+  }
 }

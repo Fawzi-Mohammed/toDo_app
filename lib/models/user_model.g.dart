@@ -42,9 +42,9 @@ const UserModelSchema = CollectionSchema(
       name: r'userName',
       type: IsarType.string,
     ),
-    r'userProfilePhoto': PropertySchema(
+    r'userProfilePhotoPath': PropertySchema(
       id: 5,
-      name: r'userProfilePhoto',
+      name: r'userProfilePhotoPath',
       type: IsarType.string,
     )
   },
@@ -87,7 +87,12 @@ int _userModelEstimateSize(
   bytesCount += 3 + object.userId.length * 3;
   bytesCount += 3 + object.userJob.length * 3;
   bytesCount += 3 + object.userName.length * 3;
-  bytesCount += 3 + object.userProfilePhoto.length * 3;
+  {
+    final value = object.userProfilePhotoPath;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -102,7 +107,7 @@ void _userModelSerialize(
   writer.writeString(offsets[2], object.userId);
   writer.writeString(offsets[3], object.userJob);
   writer.writeString(offsets[4], object.userName);
-  writer.writeString(offsets[5], object.userProfilePhoto);
+  writer.writeString(offsets[5], object.userProfilePhotoPath);
 }
 
 UserModel _userModelDeserialize(
@@ -116,7 +121,7 @@ UserModel _userModelDeserialize(
     userEmail: reader.readString(offsets[1]),
     userJob: reader.readString(offsets[3]),
     userName: reader.readString(offsets[4]),
-    userProfilePhoto: reader.readString(offsets[5]),
+    userProfilePhotoPath: reader.readStringOrNull(offsets[5]),
   );
   object.id = id;
   return object;
@@ -140,7 +145,7 @@ P _userModelDeserializeProp<P>(
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1046,13 +1051,31 @@ extension UserModelQueryFilter
   }
 
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
-      userProfilePhotoEqualTo(
-    String value, {
+      userProfilePhotoPathIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'userProfilePhotoPath',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      userProfilePhotoPathIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'userProfilePhotoPath',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      userProfilePhotoPathEqualTo(
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'userProfilePhoto',
+        property: r'userProfilePhotoPath',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1060,15 +1083,15 @@ extension UserModelQueryFilter
   }
 
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
-      userProfilePhotoGreaterThan(
-    String value, {
+      userProfilePhotoPathGreaterThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'userProfilePhoto',
+        property: r'userProfilePhotoPath',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1076,15 +1099,15 @@ extension UserModelQueryFilter
   }
 
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
-      userProfilePhotoLessThan(
-    String value, {
+      userProfilePhotoPathLessThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'userProfilePhoto',
+        property: r'userProfilePhotoPath',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1092,16 +1115,16 @@ extension UserModelQueryFilter
   }
 
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
-      userProfilePhotoBetween(
-    String lower,
-    String upper, {
+      userProfilePhotoPathBetween(
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'userProfilePhoto',
+        property: r'userProfilePhotoPath',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1112,13 +1135,13 @@ extension UserModelQueryFilter
   }
 
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
-      userProfilePhotoStartsWith(
+      userProfilePhotoPathStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'userProfilePhoto',
+        property: r'userProfilePhotoPath',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1126,13 +1149,13 @@ extension UserModelQueryFilter
   }
 
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
-      userProfilePhotoEndsWith(
+      userProfilePhotoPathEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'userProfilePhoto',
+        property: r'userProfilePhotoPath',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1140,10 +1163,10 @@ extension UserModelQueryFilter
   }
 
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
-      userProfilePhotoContains(String value, {bool caseSensitive = true}) {
+      userProfilePhotoPathContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'userProfilePhoto',
+        property: r'userProfilePhotoPath',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1151,10 +1174,10 @@ extension UserModelQueryFilter
   }
 
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
-      userProfilePhotoMatches(String pattern, {bool caseSensitive = true}) {
+      userProfilePhotoPathMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'userProfilePhoto',
+        property: r'userProfilePhotoPath',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -1162,20 +1185,20 @@ extension UserModelQueryFilter
   }
 
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
-      userProfilePhotoIsEmpty() {
+      userProfilePhotoPathIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'userProfilePhoto',
+        property: r'userProfilePhotoPath',
         value: '',
       ));
     });
   }
 
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
-      userProfilePhotoIsNotEmpty() {
+      userProfilePhotoPathIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'userProfilePhoto',
+        property: r'userProfilePhotoPath',
         value: '',
       ));
     });
@@ -1249,16 +1272,17 @@ extension UserModelQuerySortBy on QueryBuilder<UserModel, UserModel, QSortBy> {
     });
   }
 
-  QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByUserProfilePhoto() {
+  QueryBuilder<UserModel, UserModel, QAfterSortBy>
+      sortByUserProfilePhotoPath() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'userProfilePhoto', Sort.asc);
+      return query.addSortBy(r'userProfilePhotoPath', Sort.asc);
     });
   }
 
   QueryBuilder<UserModel, UserModel, QAfterSortBy>
-      sortByUserProfilePhotoDesc() {
+      sortByUserProfilePhotoPathDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'userProfilePhoto', Sort.desc);
+      return query.addSortBy(r'userProfilePhotoPath', Sort.desc);
     });
   }
 }
@@ -1337,16 +1361,17 @@ extension UserModelQuerySortThenBy
     });
   }
 
-  QueryBuilder<UserModel, UserModel, QAfterSortBy> thenByUserProfilePhoto() {
+  QueryBuilder<UserModel, UserModel, QAfterSortBy>
+      thenByUserProfilePhotoPath() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'userProfilePhoto', Sort.asc);
+      return query.addSortBy(r'userProfilePhotoPath', Sort.asc);
     });
   }
 
   QueryBuilder<UserModel, UserModel, QAfterSortBy>
-      thenByUserProfilePhotoDesc() {
+      thenByUserProfilePhotoPathDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'userProfilePhoto', Sort.desc);
+      return query.addSortBy(r'userProfilePhotoPath', Sort.desc);
     });
   }
 }
@@ -1388,10 +1413,10 @@ extension UserModelQueryWhereDistinct
     });
   }
 
-  QueryBuilder<UserModel, UserModel, QDistinct> distinctByUserProfilePhoto(
+  QueryBuilder<UserModel, UserModel, QDistinct> distinctByUserProfilePhotoPath(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'userProfilePhoto',
+      return query.addDistinctBy(r'userProfilePhotoPath',
           caseSensitive: caseSensitive);
     });
   }
@@ -1435,9 +1460,10 @@ extension UserModelQueryProperty
     });
   }
 
-  QueryBuilder<UserModel, String, QQueryOperations> userProfilePhotoProperty() {
+  QueryBuilder<UserModel, String?, QQueryOperations>
+      userProfilePhotoPathProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'userProfilePhoto');
+      return query.addPropertyName(r'userProfilePhotoPath');
     });
   }
 }

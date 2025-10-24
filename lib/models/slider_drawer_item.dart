@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-class SliderDrawerItem {
+class SliderDrawerItemModel {
   final String text;
   final IconData iconData;
 
-  SliderDrawerItem({required this.text, required this.iconData});
+  SliderDrawerItemModel({required this.text, required this.iconData});
 }

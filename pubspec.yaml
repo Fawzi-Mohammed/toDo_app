@@ -53,6 +53,9 @@ dependencies:
   fancy_snackbar:
     git:
       url: https://github.com/MR0100/fancy_snackbar.git
+  image_picker: ^1.2.0
+  permission_handler: ^11.0.1
+  shared_preferences: ^2.5.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
