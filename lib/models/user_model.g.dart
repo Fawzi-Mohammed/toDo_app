@@ -17,33 +17,43 @@ const UserModelSchema = CollectionSchema(
   name: r'UserModel',
   id: 7195426469378571114,
   properties: {
-    r'password': PropertySchema(
+    r'completedTaskCount': PropertySchema(
       id: 0,
+      name: r'completedTaskCount',
+      type: IsarType.long,
+    ),
+    r'password': PropertySchema(
+      id: 1,
       name: r'password',
       type: IsarType.string,
     ),
+    r'taskCount': PropertySchema(
+      id: 2,
+      name: r'taskCount',
+      type: IsarType.long,
+    ),
     r'userEmail': PropertySchema(
-      id: 1,
+      id: 3,
       name: r'userEmail',
       type: IsarType.string,
     ),
     r'userId': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'userId',
       type: IsarType.string,
     ),
     r'userJob': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'userJob',
       type: IsarType.string,
     ),
     r'userName': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'userName',
       type: IsarType.string,
     ),
     r'userProfilePhotoPath': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'userProfilePhotoPath',
       type: IsarType.string,
     )
@@ -102,12 +112,14 @@ void _userModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.password);
-  writer.writeString(offsets[1], object.userEmail);
-  writer.writeString(offsets[2], object.userId);
-  writer.writeString(offsets[3], object.userJob);
-  writer.writeString(offsets[4], object.userName);
-  writer.writeString(offsets[5], object.userProfilePhotoPath);
+  writer.writeLong(offsets[0], object.completedTaskCount);
+  writer.writeString(offsets[1], object.password);
+  writer.writeLong(offsets[2], object.taskCount);
+  writer.writeString(offsets[3], object.userEmail);
+  writer.writeString(offsets[4], object.userId);
+  writer.writeString(offsets[5], object.userJob);
+  writer.writeString(offsets[6], object.userName);
+  writer.writeString(offsets[7], object.userProfilePhotoPath);
 }
 
 UserModel _userModelDeserialize(
@@ -117,12 +129,14 @@ UserModel _userModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = UserModel(
-    password: reader.readString(offsets[0]),
-    userEmail: reader.readString(offsets[1]),
-    userId: reader.readStringOrNull(offsets[2]) ?? '',
-    userJob: reader.readString(offsets[3]),
-    userName: reader.readString(offsets[4]),
-    userProfilePhotoPath: reader.readStringOrNull(offsets[5]),
+    completedTaskCount: reader.readLongOrNull(offsets[0]) ?? 0,
+    password: reader.readString(offsets[1]),
+    taskCount: reader.readLongOrNull(offsets[2]) ?? 0,
+    userEmail: reader.readString(offsets[3]),
+    userId: reader.readStringOrNull(offsets[4]) ?? '',
+    userJob: reader.readString(offsets[5]),
+    userName: reader.readString(offsets[6]),
+    userProfilePhotoPath: reader.readStringOrNull(offsets[7]),
   );
   object.id = id;
   return object;
@@ -136,16 +150,20 @@ P _userModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset) ?? '') as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? '') as P;
     case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
+      return (reader.readString(offset)) as P;
+    case 7:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -343,6 +361,62 @@ extension UserModelQueryWhere
 
 extension UserModelQueryFilter
     on QueryBuilder<UserModel, UserModel, QFilterCondition> {
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      completedTaskCountEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'completedTaskCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      completedTaskCountGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'completedTaskCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      completedTaskCountLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'completedTaskCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      completedTaskCountBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'completedTaskCount',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -523,6 +597,60 @@ extension UserModelQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'password',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition> taskCountEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'taskCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition>
+      taskCountGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'taskCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition> taskCountLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'taskCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterFilterCondition> taskCountBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'taskCount',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -1213,6 +1341,19 @@ extension UserModelQueryLinks
     on QueryBuilder<UserModel, UserModel, QFilterCondition> {}
 
 extension UserModelQuerySortBy on QueryBuilder<UserModel, UserModel, QSortBy> {
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByCompletedTaskCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedTaskCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy>
+      sortByCompletedTaskCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedTaskCount', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByPassword() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'password', Sort.asc);
@@ -1222,6 +1363,18 @@ extension UserModelQuerySortBy on QueryBuilder<UserModel, UserModel, QSortBy> {
   QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByPasswordDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'password', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByTaskCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'taskCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> sortByTaskCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'taskCount', Sort.desc);
     });
   }
 
@@ -1290,6 +1443,19 @@ extension UserModelQuerySortBy on QueryBuilder<UserModel, UserModel, QSortBy> {
 
 extension UserModelQuerySortThenBy
     on QueryBuilder<UserModel, UserModel, QSortThenBy> {
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> thenByCompletedTaskCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedTaskCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy>
+      thenByCompletedTaskCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedTaskCount', Sort.desc);
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1311,6 +1477,18 @@ extension UserModelQuerySortThenBy
   QueryBuilder<UserModel, UserModel, QAfterSortBy> thenByPasswordDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'password', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> thenByTaskCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'taskCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QAfterSortBy> thenByTaskCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'taskCount', Sort.desc);
     });
   }
 
@@ -1379,10 +1557,22 @@ extension UserModelQuerySortThenBy
 
 extension UserModelQueryWhereDistinct
     on QueryBuilder<UserModel, UserModel, QDistinct> {
+  QueryBuilder<UserModel, UserModel, QDistinct> distinctByCompletedTaskCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'completedTaskCount');
+    });
+  }
+
   QueryBuilder<UserModel, UserModel, QDistinct> distinctByPassword(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'password', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserModel, UserModel, QDistinct> distinctByTaskCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'taskCount');
     });
   }
 
@@ -1431,9 +1621,21 @@ extension UserModelQueryProperty
     });
   }
 
+  QueryBuilder<UserModel, int, QQueryOperations> completedTaskCountProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'completedTaskCount');
+    });
+  }
+
   QueryBuilder<UserModel, String, QQueryOperations> passwordProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'password');
+    });
+  }
+
+  QueryBuilder<UserModel, int, QQueryOperations> taskCountProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'taskCount');
     });
   }
 

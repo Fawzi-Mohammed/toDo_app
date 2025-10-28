@@ -7,9 +7,21 @@ import 'package:todo_app/Logic/TaskCubit/task_state.dart';
 import 'package:todo_app/utils/constants.dart';
 import 'package:todo_app/views/home/components/custom_slider_drawer_body.dart';
 
-class CustomSliderDrawer extends StatelessWidget {
+class CustomSliderDrawer extends StatefulWidget {
   const CustomSliderDrawer({super.key, required this.widget});
   final Widget widget;
+
+  @override
+  State<CustomSliderDrawer> createState() => _CustomSliderDrawerState();
+}
+
+class _CustomSliderDrawerState extends State<CustomSliderDrawer> {
+  final GlobalKey<SliderDrawerState> _drawerKey = GlobalKey<SliderDrawerState>();
+
+  void _closeDrawer() {
+    _drawerKey.currentState?.closeSlider();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<TaskCubit, TaskState>(
@@ -21,6 +33,7 @@ class CustomSliderDrawer extends StatelessWidget {
         }
       },
       child: SliderDrawer(
+        key: _drawerKey,
         animationDuration: 1000,
         appBar: SliderAppBar(
           config: SliderAppBarConfig(
@@ -35,8 +48,8 @@ class CustomSliderDrawer extends StatelessWidget {
           ),
         ),
         isDraggable: false,
-        slider: CustomSliderDrawerBody(),
-        child: widget,
+        slider: CustomSliderDrawerBody(onNavigate: _closeDrawer),
+        child: widget.widget,
       ),
     );
   }

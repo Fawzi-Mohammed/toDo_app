@@ -6,7 +6,7 @@ class TaskInitial extends TaskState {}
 
 class TaskLoaded extends TaskState {
   final List<Task> tasks;
-   final int numOfComlatedTask;
+  int numOfComlatedTask = 0;
 
   TaskLoaded(this.tasks, this.numOfComlatedTask);
 }
@@ -16,14 +16,8 @@ class TaskError extends TaskState {
   TaskError(this.message);
 }
 
-class TaskEmpty extends TaskState {
-}
+class TaskEmpty extends TaskState {}
 
-class TaskEmptyDelateWarning extends TaskState{
+class TaskEmptyDelateWarning extends TaskState {}
 
-}
-class TaskDelateAllWarning extends TaskState{
-  
-}
-
-
+class TaskDelateAllWarning extends TaskState {}

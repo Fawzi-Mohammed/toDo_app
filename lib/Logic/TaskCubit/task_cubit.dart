@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:todo_app/Logic/TaskCubit/task_state.dart';
 import 'package:todo_app/data/isar_data_base_of_tasks.dart';
+import 'package:todo_app/data/isar_data_base_of_users.dart';
+import 'package:todo_app/data/shared_prefes_of_loged_in_user.dart';
 import 'package:todo_app/models/task.dart';
 
 class TaskCubit extends Cubit<TaskState> {
@@ -31,8 +33,23 @@ class TaskCubit extends Cubit<TaskState> {
             numOfComlatedTask += 1;
           }
         }
+        final user = await IsarDataBaseOfUsers.getUserByUserId(userId);
+        if (user != null) {
+          user.taskCount = tasks.length;
+          user.completedTaskCount = numOfComlatedTask;
+          await IsarDataBaseOfUsers.updateUser(user);
+          await SharedPrefesOfLoggedInUser.updateUser(user);
+        }
         emit(TaskLoaded(tasks, numOfComlatedTask));
       } else {
+        // No tasks: ensure user counts are zeroed
+        final user = await IsarDataBaseOfUsers.getUserByUserId(userId);
+        if (user != null) {
+          user.taskCount = 0;
+          user.completedTaskCount = 0;
+          await IsarDataBaseOfUsers.updateUser(user);
+          await SharedPrefesOfLoggedInUser.updateUser(user);
+        }
         emit(TaskEmpty());
       }
     } catch (e) {

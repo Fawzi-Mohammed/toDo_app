@@ -27,7 +27,7 @@ class SliderDrawerItemWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white.withOpacity(.2) : Colors.transparent,
+          color: isSelected ? Colors.white.withValues(alpha: .2) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -41,7 +41,7 @@ class SliderDrawerItemWidget extends StatelessWidget {
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 300),
               style: textTheme.titleMedium!.copyWith(
-                color: isSelected ? Colors.white : Colors.white.withOpacity(.8),
+                color: isSelected ? Colors.white : Colors.white.withValues(alpha: .8),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
               child: Text(text),

@@ -14,7 +14,8 @@ import 'package:todo_app/views/home/components/slider_drawer_item_widget.dart';
 import 'package:todo_app/views/login%20and%20signUp/components/profile_image.dart';
 
 class CustomSliderDrawerBody extends StatefulWidget {
-  const CustomSliderDrawerBody({super.key});
+  const CustomSliderDrawerBody({super.key, this.onNavigate});
+  final VoidCallback? onNavigate;
 
   @override
   State<CustomSliderDrawerBody> createState() => _CustomSliderDrawerBodyState();
@@ -97,13 +98,22 @@ class _CustomSliderDrawerBodyState extends State<CustomSliderDrawerBody> {
                         text: item.text,
                         isSelected: isSelected,
                         onTap: () {
+                          // Close drawer (if provided) before navigating
+                          widget.onNavigate?.call();
                           if (index != selectedIndex) {
                             setState(() => selectedIndex = index);
-                            if (item.text == 'LogOut') {
-                              context.go('/');
-                              context.read<AuthCubit>().LogOut();
-                            }
                           }
+                          if (index == 1) {
+                            context.go('/toDoHome/profile');
+                          }
+                          if (index == 2) {
+                            context.go('/');
+                            context.read<AuthCubit>().LogOut();
+                          }
+                          if (index == 0) {
+                            context.go('/toDoHome');
+                          }
+                           
                         },
                       );
                     },

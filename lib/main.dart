@@ -6,9 +6,12 @@ import 'package:todo_app/Logic/TaskCubit/task_cubit.dart';
 import 'package:todo_app/data/isar_data_base_service.dart';
 import 'package:todo_app/data/shared_prefes_of_loged_in_user.dart';
 import 'package:todo_app/utils/app_str_style.dart';
+import 'package:todo_app/views/Profile/profile_view.dart';
 import 'package:todo_app/views/home/to_do_home_view.dart';
 import 'package:todo_app/views/login%20and%20signUp/login_view.dart';
 import 'package:todo_app/views/login%20and%20signUp/sign_up_view.dart';
+
+import 'package:todo_app/views/login and signUp/update_profile_view.dart';
 import 'package:todo_app/views/tasks/task_view.dart';
 
 Future<void> main() async {
@@ -60,6 +63,20 @@ GoRouter _createRouter(String initialRoute) {
                 child: TaskView(isUpdate: isUpdate, task: task),
               );
             },
+          ),
+          GoRoute(
+            path: 'profile',
+            pageBuilder: (context, state) => _buildTransitionPage(
+              key: state.pageKey,
+              child: const ProfileView(),
+            ),
+          ),
+          GoRoute(
+            path: 'updateProfile',
+            pageBuilder: (context, state) => _buildTransitionPage(
+              key: state.pageKey,
+              child: const UpdateProfileView(),
+            ),
           ),
         ],
       ),

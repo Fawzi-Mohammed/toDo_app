@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:isar/isar.dart';
 import 'package:uuid/uuid.dart';
 part 'user_model.g.dart'; // 👈 required for code generation
@@ -7,21 +6,30 @@ part 'user_model.g.dart'; // 👈 required for code generation
 @Collection()
 class UserModel {
   Id id = Isar.autoIncrement;
+
   @Index(unique: true)
   final String userId;
-  final String userName;
-  final String? userProfilePhotoPath;
-  final String userJob;
+
+   String userName;
+   String? userProfilePhotoPath;
+   String userJob;
   final String userEmail;
-  final String password;
+   String password;
+
+  int taskCount;
+  int completedTaskCount;
+
   UserModel({
     required this.password,
     required this.userEmail,
     required this.userJob,
     required this.userName,
     required this.userProfilePhotoPath,
+    this.taskCount = 0,
+    this.completedTaskCount = 0,
     String userId = '',
   }) : userId = userId.isEmpty ? const Uuid().v4() : userId;
+
   String toJson() {
     return jsonEncode({
       'userId': userId,
@@ -30,6 +38,8 @@ class UserModel {
       'userJob': userJob,
       'userEmail': userEmail,
       'password': password,
+      'taskCount': taskCount,
+      'completedTaskCount': completedTaskCount,
     });
   }
 
@@ -41,6 +51,8 @@ class UserModel {
       userJob: map['userJob'],
       userEmail: map['userEmail'],
       password: map['password'],
+      taskCount: map['taskCount'] ?? 0,
+      completedTaskCount: map['completedTaskCount'] ?? 0,
       userId: map['userId'] ?? '',
     );
   }
